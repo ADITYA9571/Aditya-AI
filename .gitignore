@@ -223,3 +223,6 @@ desktop.ini
 # Files
 *.docx
 *.txt
+
+# new env
+aadi_env/
