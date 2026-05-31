@@ -219,3 +219,7 @@ __marimo__/
 
 # Desktop
 desktop.ini
+
+# Files
+*.docx
+*.txt
