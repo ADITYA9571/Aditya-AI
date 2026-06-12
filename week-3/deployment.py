@@ -6,7 +6,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-app = FastAPI()
+app = FastAPI() # creating the instance of the app
 
 class TextToken(BaseModel):
     text : str
@@ -20,15 +20,18 @@ class TaskUpdate(BaseModel):
     weekly_tasks_id: str
     tasks: Annotated[Optional[str],Field(default=None)]
 
+# load the data using function call
 def load_data():
     with open('weekly_tasks.json', 'r', encoding="utf-8") as f:
         data = json.load(f)
         return data
 
+# save the data after changes 
 def save_data(data):
     with open('weekly_tasks.json','w', encoding="utf-8") as f:
         json.dump(data,f)
 
+# Dict of all model[key]=vlaue
 MODEL_COSTS = {
     "gpt-5": 1.25,
     "gpt-5-mini": 0.25,
@@ -40,6 +43,7 @@ MODEL_COSTS = {
     "gpt-3.5-turbo": 0.50,
 }
 
+# Original code for token counter
 def token_counter(str1:str, model:str):
     if model not in MODEL_COSTS:
         raise HTTPException(status_code=400, detail='Unsupported model')
@@ -56,18 +60,22 @@ def token_counter(str1:str, model:str):
             "tokens": token_count,
             "input_cost": round(input_cost, 7)}
 
+# First Endpoint- GET hello
 @app.get("/")
 def hello():
     return {'message':'Token Counter'}
 
+# second endpoint about section
 @app.get('/about')
 def about():
     return {'message':'API deployment for token counter'}
 
+# endpoint for user input string 
 @app.post('/text-tokens')
 async def text_tokens(data: TextToken):
     return token_counter(data.text, data.model)
 
+# endpoint for uploading file 
 @app.post('/file-tokens')
 async def file_tokens(file: UploadFile = File(...),model: str = "gpt-5"):
     try:
@@ -77,6 +85,7 @@ async def file_tokens(file: UploadFile = File(...),model: str = "gpt-5"):
         raise HTTPException(status_code=400,detail="Only UTF-8 text files are supported") from exc
     return token_counter(text, model)
 
+# Create endpoint from C->CRUD
 @app.post('/create')
 async def add_task(task_assign:TaskAssignment):
     weekly_tasks = load_data()
@@ -87,6 +96,7 @@ async def add_task(task_assign:TaskAssignment):
     return {"message": "Task created successfully",
             "task": weekly_tasks[task_assign.weekly_tasks_id]}
 
+# Read/View from R->CRUD
 @app.get("/weekly_tasks/{weekly_tasks_id}")
 async def get_sample(weekly_tasks_id: str):
     weekly_tasks = load_data()
@@ -98,6 +108,7 @@ async def get_sample(weekly_tasks_id: str):
 async def get_all_tasks():
     return load_data()
 
+# Updating the existing data for U->CRUD
 @app.put("/update")
 async def update(task_update: TaskUpdate):
     data = load_data()
@@ -112,6 +123,7 @@ async def update(task_update: TaskUpdate):
     save_data(data)
     return JSONResponse(status_code=200,content={"message": "Data updated successfully"})
 
+# Deleting any assigned task D->CRUD 
 @app.delete('/delete/{weekly_tasks_id}')
 def delete_task(weekly_tasks_id: str):
     data = load_data()
