@@ -1,0 +1,26 @@
+{
+    "1": {
+        "text": "Python"
+    },
+    "2": {
+        "text": "Git Foundations"
+    },
+    "3": {
+        "text": "FastAPI + Docker"
+    },
+    "4": {
+        "text": "LLM Basics + First API Call"
+    },
+    "5": {
+        "text": "Prompt Engineering + Cost Awareness"
+    },
+    "6": {
+        "text": "Agents + Tool Use"
+    },
+    "7": {
+        "text": "Multi-Agent Basics"
+    },
+    "8": {
+        "text": "Smart Document Router"
+    }
+}
