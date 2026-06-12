@@ -228,3 +228,6 @@ desktop.ini
 
 # new env
 aadi_env/
+
+# folder
+learn_fastapi/
